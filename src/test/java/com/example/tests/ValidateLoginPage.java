@@ -19,6 +19,8 @@ public class ValidateLoginPage {
                     page.url());
             assertEquals("Swag Labs",
                     Component.getText(page,".app_logo"));
+            assertEquals("Products",
+                    Component.getText(page, ".title"));
        }
         finally {
             TestSetup.tearDown();
