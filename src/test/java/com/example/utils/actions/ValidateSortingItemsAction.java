@@ -1,11 +1,15 @@
 package com.example.utils.actions;
+
+import com.example.utils.Component;
+import com.example.utils.DataType;
 import com.example.utils.TestSetup;
+import static com.example.utils.helpers.SortUtils.sortAscending;
+import static com.example.utils.helpers.SortUtils.sortDescending;
 
 import com.microsoft.playwright.Page;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,67 +22,43 @@ implements AutoCloseable {
             page = TestSetup.setUpAndLogin();
 
             // Default sort by name (ascending)
-            List<String> actualNames = page.locator(".inventory_item")
-                    .allInnerTexts()
-                    .stream()
-                    .map(String::trim)
-                    .collect(Collectors.toList());
+            List<String> itemNames = Component.getList(page,
+                    ".inventory_item",
+                    DataType.NAME,
+                    String.class);
 
-            List<Double> defaultPriceList = page.locator(".inventory_item_price")
-                    .allInnerTexts()
-                    .stream()
-                    .map(text -> text.replace("$", "").trim())
-                    .map(Double::parseDouble)
-                    .collect(Collectors.toList());
-
-            assertEquals(actualNames
-                    .stream()
-                    .sorted()
-                    .collect(Collectors.toList()),
-                    actualNames);
+// Verify sort by names in ascending order
+            assertEquals(sortAscending(itemNames),
+                    itemNames);
 
             // Name sort Z to A
             page.selectOption(".product_sort_container", "za");
-            List<String> reverseOrderedNames = page.locator(".inventory_item")
-                    .allInnerTexts()
-                    .stream()
-                    .map(String::trim)
-                    .collect(Collectors.toList());
+            List<String> reverseOrderedNames = Component.getList(page,
+                    ".inventory_item",
+                    DataType.NAME,
+                    String.class);
 
-            assertEquals(actualNames
-                    .stream()
-                    .sorted(Comparator.reverseOrder())
-                    .collect(Collectors.toList()),
+            assertEquals(sortDescending(itemNames),
                     reverseOrderedNames);
 
             // Price Low to High
             page.selectOption(".product_sort_container", "lohi");
-            List<Double> lowToHiPrices = page.locator(".inventory_item_price")
-                    .allInnerTexts()
-                    .stream()
-                    .map(text -> text.replace("$", "").trim())
-                    .map(Double::parseDouble)
-                    .collect(Collectors.toList());
+            List<Double> lowToHiPrices = Component.getList(page,
+                    ".inventory_item_price",
+                    DataType.PRICE,
+                    Double.class);
 
-            assertEquals(defaultPriceList
-                    .stream()
-                    .sorted()
-                    .collect(Collectors.toList()),
+            assertEquals(sortAscending(lowToHiPrices),
                     lowToHiPrices);
 
             // Price High to Low
             page.selectOption(".product_sort_container", "hilo");
-            List<Double> hiToLoPrices = page.locator(".inventory_item_price")
-                    .allInnerTexts()
-                    .stream()
-                    .map(text -> text.replace("$", "").trim())
-                    .map(Double::parseDouble)
-                    .collect(Collectors.toList());
+            List<Double> hiToLoPrices = Component.getList(page,
+                    ".inventory_item_price",
+                    DataType.PRICE,
+                    Double.class);
 
-            assertEquals(defaultPriceList
-                    .stream()
-                    .sorted(Comparator.reverseOrder())
-                    .collect(Collectors.toList()),
+            assertEquals(sortDescending(lowToHiPrices),
                     hiToLoPrices);
     }
     @Override
