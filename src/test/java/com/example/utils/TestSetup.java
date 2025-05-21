@@ -11,9 +11,17 @@ public class TestSetup {
     private static Playwright playwright;
     private static Browser browser;
 
+    private static void initialize() {
+        if (playwright == null) {
+            playwright = Playwright.create();  // Initialize Playwright instance
+        }
+        if (browser == null) {
+            browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));  // Initialize Browser instance
+        }
+    }
     public static Page setUpAndLogin() {
-        playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+        initialize();
+
         BrowserContext context = browser.newContext();
         Page page = context.newPage();
 
@@ -29,9 +37,11 @@ public class TestSetup {
     public static void tearDown() {
         if (browser != null) {
             browser.close();
+            browser = null;
         }
         if (playwright != null) {
             playwright.close();
+            playwright = null;
         }
     }
 }

@@ -9,8 +9,6 @@ public class AddItemsToCart {
     public void addItemsToCart() {
         try(AddItemsToCartAction a = new AddItemsToCartAction()){
             a.addItemsToCartAction();
-        } finally {
-
         }
     }
 }

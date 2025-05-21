@@ -7,9 +7,7 @@ public class ValidateSortingItems {
     @Test
     public void testValidateSortingItems() {
         try(ValidateSortingItemsAction a = new ValidateSortingItemsAction()){
-            a.validateSortingItems();
-        } finally {
-
+            a.validateSortingItemsAction();
         }
     }
 }
