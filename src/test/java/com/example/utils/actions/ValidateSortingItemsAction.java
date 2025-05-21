@@ -1,25 +1,25 @@
 package com.example.utils.actions;
 
+import com.example.utils.BaseTest;
 import com.example.utils.Component;
 import com.example.utils.DataType;
-import com.example.utils.TestSetup;
+
 import static com.example.utils.helpers.SortUtils.sortAscending;
 import static com.example.utils.helpers.SortUtils.sortDescending;
 
-import com.microsoft.playwright.Page;
-
 import java.util.List;
-
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class ValidateSortingItemsAction
+extends BaseTest
 implements AutoCloseable {
-    public static void validateSortingItems() {
-        Page page = null;
 
-            page = TestSetup.setUpAndLogin();
+    public ValidateSortingItemsAction() {
+        setUp();
+    }
+    public void validateSortingItemsAction() {
 
             // Default sort by name (ascending)
             List<String> itemNames = Component.getList(page,
@@ -63,7 +63,7 @@ implements AutoCloseable {
     }
     @Override
     public void close() {
-        TestSetup.tearDown();
+        tearDown();
     }
 }
 
