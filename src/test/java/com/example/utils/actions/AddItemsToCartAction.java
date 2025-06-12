@@ -22,27 +22,56 @@ implements AutoCloseable {
     public void addItemsToCartAction(){
 
         Locator items = page.locator(".inventory_item");
-        int randomIndex = new Random().nextInt(items.count());
+        int totalItems = items.count();
+        // Determine how many items to add: between 2 and totalItems
+        int numberOfItemsToAdd = new Random().nextInt(totalItems - 1) + 2;
 
         // Get the selected item name
-        String selectedItemName = items.nth(randomIndex)
-                .locator(".inventory_item_name")
-                .innerText()
-                .trim();
+        List<Integer> randomIndexes = new Random()
+                .ints(0, totalItems)
+                .distinct()
+                .limit(numberOfItemsToAdd)
+                .boxed()
+                .collect(Collectors.toList());
 
-        // Add the selected item to cart
-        items.nth(randomIndex)
-                .locator("button:has-text('Add to cart')")
-                .click();
+
+        List<String> selectedItemNames = randomIndexes.stream().map(index -> {
+            String itemName = items.nth(index)
+                    .locator(".inventory_item_name")
+                    .innerText()
+                    .trim();
+
+            items.nth(index)
+                    .locator("button:has-text('Add to cart')")
+                    .click();
+
+            return itemName;
+        }).collect(Collectors.toList());
+
+        // Verify item count on shopping cart icon
+
+        Locator shoppingCartLink = page
+                .locator(".shopping_cart_badge");
+
+        int itemCount = Integer.parseInt(shoppingCartLink
+                .textContent()
+                        .trim());
+        Assertions.assertEquals (numberOfItemsToAdd,
+                itemCount,
+                "Item Count mismatch");
 
         page.click(".shopping_cart_link");
 
-        Locator cartItems = page
-                .locator(".cart_item .inventory_item_name");
-
-        Assertions.assertTrue(cartItems.allInnerTexts().stream()
+        List <String> cartItems = page
+                .locator(".cart_item .inventory_item_name")
+                .allInnerTexts()
+                .stream()
                 .map(String::trim)
-                .anyMatch(name -> name.equals(selectedItemName)));
+                .collect(Collectors.toList());
+
+
+        Assertions.assertTrue(cartItems.containsAll(selectedItemNames));
+
 
     }
 //    public void undoLogic() {
