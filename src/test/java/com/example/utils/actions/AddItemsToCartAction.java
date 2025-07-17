@@ -81,6 +81,10 @@ implements AutoCloseable {
 //                .locator("button:has-text('Remove')")
 //                .click();
 //    }
+
+    public Page getPage() {
+        return this.page;
+    }
     @Override
     public void close(){
 //        undoLogic();
