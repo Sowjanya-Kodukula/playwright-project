@@ -14,9 +14,13 @@ import java.util.stream.Collectors;
 public class AddItemsToCartAction
 extends BaseTest
 implements AutoCloseable {
-
+    private List<String> selectedItemNames;
     public AddItemsToCartAction() {
         setUp(); // initialize Playwright, browser, context, and login
+    }
+
+    public List<String> getSelectedItemNames() {
+        return selectedItemNames;
     }
 
     public void addItemsToCartAction(){
@@ -35,7 +39,7 @@ implements AutoCloseable {
                 .collect(Collectors.toList());
 
 
-        List<String> selectedItemNames = randomIndexes.stream().map(index -> {
+        selectedItemNames = randomIndexes.stream().map(index -> {
             String itemName = items.nth(index)
                     .locator(".inventory_item_name")
                     .innerText()
