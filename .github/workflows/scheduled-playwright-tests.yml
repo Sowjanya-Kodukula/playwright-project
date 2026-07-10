@@ -23,26 +23,21 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Cache Maven dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+      - name: Grant execute permission
+        run: chmod +x gradlew
 
-      - name: Install dependencies
-        run: mvn clean install -DskipTests
-
-      - name: Install Playwright Browsers
-        run: mvn exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install --with-deps"
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Run Playwright Tests
-        run: mvn test
-      - name: Upload Surefire Reports
+        run: ./gradlew clean test
+
+      - name: Upload Test Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: surefire-reports
-          path: target/surefire-reports/
+          name: test-report
+          path: build/reports/tests/test/
 
       - name: Upload Playwright Report   # generates playwright reports
         if: always()
