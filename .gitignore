@@ -31,3 +31,10 @@ bin/
 # IntelliJ project files
 .idea/
 *.iml
+
+# Gradle
+.gradle/
+build/
+
+# Gradle Wrapper JAR (keep this tracked)
+!gradle/wrapper/gradle-wrapper.jar
