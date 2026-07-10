@@ -1,0 +1,22 @@
+plugins(({
+    id 'java'
+} as Closure))
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17) // or 25 if you insist
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.microsoft.playwright:playwright:1.45.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+}
+
+test {
+    useJUnitPlatform()
+}
