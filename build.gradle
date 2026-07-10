@@ -1,10 +1,10 @@
-plugins(({
+plugins {
     id 'java'
-} as Closure))
+}
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17) // or 25 if you insist
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
@@ -14,8 +14,12 @@ repositories {
 
 dependencies {
     implementation 'com.microsoft.playwright:playwright:1.45.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testRuntimeOnly  'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+    testRuntimeOnly  'org.junit.platform:junit-platform-launcher'
 }
+
 
 test {
     useJUnitPlatform()
