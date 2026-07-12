@@ -16,7 +16,7 @@ public class TestSetup {
             playwright = Playwright.create();  // Initialize Playwright instance
         }
         if (browser == null) {
-            browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));  // Initialize Browser instance
+            browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true));  // Initialize Browser instance
         }
     }
     public static Page setUpAndLogin() {

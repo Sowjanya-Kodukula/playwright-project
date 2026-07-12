@@ -29,6 +29,15 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Install Playwright Browsers
+        run: |
+          chmod +x gradlew
+          ./gradlew testClasses
+      - name: Install Playwright Browsers
+        run: |
+          chmod +x gradlew
+          ./gradlew testClasses
+          java -cp build/classes/java/test:build/classes/java/main:build/resources/test:build/resources/main:build/libs/* com.microsoft.playwright.CLI install --with-deps
       - name: Run Playwright Tests
         run: ./gradlew clean test
 
@@ -52,3 +61,6 @@ jobs:
         with:
           name: screenshots
           path: test-results/
+
+env:
+  HEADLESS: "true"
