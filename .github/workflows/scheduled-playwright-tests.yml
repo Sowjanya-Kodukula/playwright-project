@@ -2,7 +2,7 @@ name: Scheduled Playwright Tests
 
 on:
   schedule:
-    - cron: '0 17 * * *'   # Every day at 5:00 PM UTC
+    - cron: '0 17 * * 1'   # Every Monday at 5:00 PM UTC
   workflow_dispatch:        # Allows manual run
   push:
     branches:
@@ -37,19 +37,13 @@ jobs:
       - name: Run Playwright Tests
         run: ./gradlew clean test
 
-      - name: Upload Test Report
+      - name: Upload Test Report           # generates playwright reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-report
           path: build/reports/tests/test/
 
-      - name: Upload Playwright Report   # generates playwright reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright-report/
 
       - name: Upload Screenshots          #  uploads screenshots if test takes screenshots
         if: always()
