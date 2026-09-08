@@ -23,16 +23,15 @@ implements AutoCloseable {
         return selectedItemNames;
     }
 
-    public void addItemsToCartAction(){
+    public void addItemsToCartAction() {
 
         Locator items = page.locator(".inventory_item");
-        int totalItems = items.count();
         // Determine how many items to add: between 2 and totalItems
-        int numberOfItemsToAdd = new Random().nextInt(totalItems - 1) + 2;
+        int numberOfItemsToAdd = new Random().nextInt(items.count() - 1) + 2;
 
         // Get the selected item name
         List<Integer> randomIndexes = new Random()
-                .ints(0, totalItems)
+                .ints(0, items.count())
                 .distinct()
                 .limit(numberOfItemsToAdd)
                 .boxed()
@@ -52,20 +51,36 @@ implements AutoCloseable {
             return itemName;
         }).collect(Collectors.toList());
 
+        Assertions.assertEquals(selectedItemNames.size(),
+                getItemCount(),
+                "Shopping cart item count does not match the number of selected items"
+        );
+
+    }
+
         // Verify item count on shopping cart icon
-
-        Locator shoppingCartLink = page
-                .locator(".shopping_cart_badge");
-
-        int itemCount = Integer.parseInt(shoppingCartLink
-                .textContent()
+    public  int getItemCount() {
+        return Integer.parseInt(
+                page.locator(".shopping_cart_badge")
+                        .textContent()
                         .trim());
-        Assertions.assertEquals (numberOfItemsToAdd,
-                itemCount,
-                "Item Count mismatch");
+        }
 
+
+
+        /* Locator shoppingCartLink = ;
+
+            int itemCount = Integer.parseInt(shoppingCartLink
+                    .textContent()
+                    .trim());
+            Assertions.assertEquals(numberOfItemsToAdd,
+                    itemCount,
+                    "Item Count mismatch");
+        } */
+
+
+    public void goToShoppingCartAndVerifyItems() {
         page.click(".shopping_cart_link");
-
         List <String> cartItems = page
                 .locator(".cart_item .inventory_item_name")
                 .allInnerTexts()
@@ -76,8 +91,22 @@ implements AutoCloseable {
 
         Assertions.assertTrue(cartItems.containsAll(selectedItemNames));
 
+    }
+
+    public void removeSelectedItemsFromHomePage() {
+
+        for (String selectedItem : selectedItemNames) {
+            page.locator(".inventory_item_name")
+                    .filter(new Locator.FilterOptions()
+                            .setHasText(selectedItem))
+                    .locator("button:has-text('Remove')")
+                    .click();
+
+        }
 
     }
+
+
 //    public void undoLogic() {
 //        // Logic to remove item from the cart to reset the system state
 //        Locator cartItem = page.locator(".cart_item .inventory_item_name");
